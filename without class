@@ -1,0 +1,78 @@
+#include<Servo.h> 
+Servo LF;
+Servo RF;
+ int x;
+int z = 50;
+int a;
+int b;                  //variables for left finger averages
+int c;
+int d;
+int e;
+int temp1;
+int median1;
+  //flex sensor right finger
+int a2;
+int b2;                    //variables for right finger averages
+int c2;
+int d2;
+int e2;
+int temp2;
+int median2;
+//_____________________________________________________________________________________________________________________________________________________________________-
+void leftfinger(){
+ int x = analogRead(A0);                         
+ delay(z);
+ int a = analogRead(A0);
+ delay(z);
+int b = analogRead(A0);
+delay(z);                       
+int c = analogRead(A0);                                       //reads the values and then calculates an average 
+delay(z);                                                    //next it maps the average with 35,140,180,0
+int d = analogRead(A0);                                      //the code finally puts the map value into a "LF.write()" and goes to the angle
+delay(z);
+int e = analogRead(A0);
+delay(z);
+int median1 = (a+b+c+d+e) / 5;        //calculates median1
+int temp1 = map(median1,140,35,180,0);
+delay(50);               
+Serial.println(temp1);                      //prints temp1's value 
+LF.write(temp1);
+//delay(100);
+}
+
+void rightfinger(){
+  int a2 = analogRead(A1);
+delay(50);
+int b2 = analogRead(A1);
+delay(50);
+int c2 = analogRead(A1);
+delay(50);                                                       // takes the values from the sensor and records the value
+int d2 = analogRead(A1);                                         //under the variables on the left. The values are then used to
+delay(50);                                                       //to calculate an average which is mapped with 35,140,180,0
+int e2 = analogRead(A1);                                         //the value is then put into a "RF.write()" which commandes the angle to go
+delay(50);                                                       //to the angle
+int median2 = (a2+b2+c2+d2+e2) / 5;
+int temp2 = map(median2,640,190,180,0);
+RF.write(temp2);
+}//_________________________________________________________________________________________________________________________________________________________________________
+void setup() {
+  // put your setup code here, to run once:
+LF.attach(5);              //left finger
+RF.attach(6);              //right finger
+pinMode(6,OUTPUT);                //Right finger pin
+pinMode(5,OUTPUT);                //left finger pin
+//Block 1(declear all pins,and servos)                         
+
+Serial.begin(9600);
+pinMode(A0,INPUT);               //flex sensor left finger
+pinMode(A1,INPUT);    
+int x = 0;
+LF.write(x);
+RF.write(x);                       //makes the finger start straight
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+leftfinger();     //for left finger
+rightfinger();   // for right finger
+}
